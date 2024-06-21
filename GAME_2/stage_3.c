@@ -1,15 +1,15 @@
-ï»¿#include "superclass.h"
+#include "superclass.h"
 
-void stage_2(char id[], int mop_num) {
+void stage_3(char id[], int mop_num) {
     bool mana_recovery = false;
     Clear_Gamelog();
     static int initial_x = 32, initial_y = 17, mop_hp, mop_max_hp;
-    int n = 10;
+    int n = 8;
     label:;
-    Monster m[10] = { goblin(), bat(), bat(), Whisper(), oak(), goblin(), slime(), oak(), goblin(), wolfman() };
+    Monster m[10] = { oak(), bat(), oak(), wolfman(), oak(), magician(), wolfman(), Golem() };
     memset(string, 0, sizeof(string));
     setRGBColor(0, 255, 0);
-    strcpy(string, "Stage.2");
+    strcpy(string, "Stage.3");
     printAt(initial_x, initial_y, string);
     resetColor();
     MYSQL db;
@@ -22,7 +22,7 @@ void stage_2(char id[], int mop_num) {
     char query[255];
     char event_check[30];
     memset(event_check, 0, sizeof(event_check));
-    sprintf(query, "UPDATE gwangju_sword_master.account SET stage = 2, mop_num = %d WHERE id = '%s'", mop_num, id);
+    sprintf(query, "UPDATE gwangju_sword_master.account SET stage = 3, mop_num = %d WHERE id = '%s'", mop_num, id);
     if (mysql_query(&db, query)) {
         db_query_error(&db);
         mysql_close(&db);
@@ -51,26 +51,26 @@ void stage_2(char id[], int mop_num) {
             }
             memset(string, 0, sizeof(string));
             srand(time(NULL));
-            if (strcmp(m[i].name, "ê³ ë¸”ë¦°") == 0 || strcmp(m[i].name, "ìŠ¬ë¼ì„") == 0 || strcmp(m[i].name, "ëŠ‘ëŒ€ì¸ê°„") == 0) {
+            if (strcmp(m[i].name, "°íºí¸°") == 0 || strcmp(m[i].name, "½½¶óÀÓ") == 0 || strcmp(m[i].name, "´Á´ëÀÎ°£") == 0 || strcmp(m[i].name, "°ñ·½") == 0) {
                 short sync = rand() % 2 + 1;
                 if (sync == 1) {
-                    sprintf(string, "%sì´ íŠ€ì–´ë‚˜ì™”ë‹¤!", m[i].name);
+                    sprintf(string, "%sÀÌ Æ¢¾î³ª¿Ô´Ù!", m[i].name);
                 }
                 else {
-                    sprintf(string, "%sì´ ë‚˜íƒ€ë‚¬ë‹¤!", m[i].name);
+                    sprintf(string, "%sÀÌ ³ªÅ¸³µ´Ù!", m[i].name);
                 }
             }
             else {
                 short sync = rand() % 2 + 1;
                 if (sync == 1) {
-                    sprintf(string, "%sê°€ íŠ€ì–´ë‚˜ì™”ë‹¤!", m[i].name);
+                    sprintf(string, "%s°¡ Æ¢¾î³ª¿Ô´Ù!", m[i].name);
                 }
                 else {
-                    sprintf(string, "%sê°€ ë‚˜íƒ€ë‚¬ë‹¤!", m[i].name);
+                    sprintf(string, "%s°¡ ³ªÅ¸³µ´Ù!", m[i].name);
                 }
             }
             gotoxy(50, 21);
-            printf("                                                    ");
+            printf("                                                           ");
             scrollup_motion(initial_x, 17);
             printAt(initial_x, initial_y, string);
             mop_max_hp = mop_hp = m[i].hp;
@@ -81,7 +81,6 @@ void stage_2(char id[], int mop_num) {
                     mysql_close(&db);
                     exit(1);
                 }
-
                 MYSQL_RES* res = mysql_store_result(&db);
                 MYSQL_ROW row = mysql_fetch_row(res);
                 int mp_max = atoi(row[0]);
@@ -144,7 +143,7 @@ void stage_2(char id[], int mop_num) {
                     else if (mop_hp <= 0) {
                         memset(string, 0, sizeof(string));
                         setRGBColor(255, 255, 51);
-                        sprintf(string, "%së¥¼ ì²˜ì¹˜í–ˆë‹¤!", m[i].name);
+                        sprintf(string, "%s¸¦ Ã³Ä¡Çß´Ù!", m[i].name);
                         drop_booty(id, m[i].name);
                         scrollup_motion(initial_x, 17);
                         printAt(initial_x, initial_y, string);
@@ -158,27 +157,19 @@ void stage_2(char id[], int mop_num) {
                             exit(0);
                         }
                         event:;
-                        if (mop_num == 3) {
+                        if (mop_num == 2) {
                             Clear_Gamelog();
                             gotoxy(50, 21);
                             printf("                                              ");
-                            Whisper_conn(id);
+                            Rooting_conn(id);
                             memset(query, 0, sizeof(query));
                             Clear_Gamelog();
                         }
-                        if (mop_num == 6) {
-							Clear_Gamelog();
-							gotoxy(50, 21);
-							printf("                                              ");
-							Health_Club_conn(id);
-							memset(query, 0, sizeof(query));
-							Clear_Gamelog();
-						}
-                        if (mop_num == 9) {
+                        if (mop_num == 8) {
                             Clear_Gamelog();
                             gotoxy(50, 21);
-                            printf("                                              ");
-                            Heavy_Maichgun_conn(id);
+                            printf("                                                  ");
+                            Mimic_conn(id);
                             memset(query, 0, sizeof(query));
                             Clear_Gamelog();
                         }
@@ -194,11 +185,11 @@ void stage_2(char id[], int mop_num) {
     mysql_close(&db);
     gotoxy(50, 21);
     printf("                                              ");
-    stage2_clear(id);
-    stage_3(id, 1);
+    stage3_clear(id);
+    stage_4(id, 1);
 }
 
-void stage2_clear(char id[]) {
+void stage3_clear(char id[]) {
     MYSQL db;
     gotoxy(50, 21);
     printf("                                           ");
@@ -208,12 +199,12 @@ void stage2_clear(char id[]) {
     unsigned int line = 0;
     unsigned int final_y = 2;
     memset(query, 0, sizeof(query));
-    const char* text = "ë‹¹ì‹ ì€ ì˜ë¬¸ì˜ í• ì•„ë²„ì§€ì™€ ë§ˆì£¼ì¹œ í›„ ëŠ‘ëŒ€ì¸ê°„ê³¼ì˜ í˜ˆíˆ¬ì—ì„œ ìŠ¹ë¦¬í•˜ê³ \n"
-        "ìˆ²ì„ ë‚˜ì™”ìŠµë‹ˆë‹¤.\n"
-        "ê·¸ë€ë””ìŠ¤ê°€ ìˆëŠ” ê³³ì´ ë©€ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤..\n"
-        "ì•Œ ìˆ˜ ì—†ëŠ” í˜ì€ ì•„ì§ ë‹¹ì‹ ì„ ë”°ë¼ë‹¤ë‹ˆë©° ê°€ë©´ ê°ˆìˆ˜ë¡ ì ë“¤ì€ ê°•ë ¥í•´ì§€ê³  ìˆìŠµë‹ˆë‹¤.\n"
-        "ê·¸ëŸ¬ë‚˜ ì•„ì§ ë‹¹ì‹ ì˜ ì‚¬ëª…ì€ ì™„ìˆ˜ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤...\n"
-        "ì•ìœ¼ë¡œ ë‚˜ì•„ê°‘ì‹œë‹¤!";
+    const char* text = "°íÁö°¡ ´ç½ÅÀÇ ´«¾Õ¿¡ ÀÖ½À´Ï´Ù.\n"
+        "ÀûµéÀº ¹«½ÃÇÒ ¼ö ¾øÀ»Á¤µµ·Î °­·ÂÇØÁö°í ÀÖ°í\n"
+        "Áö³ª¿Â ±æÀº ¼ö¸¹Àº ÇÇ¿Í ¸ğ¸£´Â ÀÌÀÇ ½ÃÃ¼·Î °¡µæÇÕ´Ï´Ù.\n"
+        "¾ÕÀ¸·ÎÀÇ ±æÀº ±× ´©±¸µµ µµ´ŞÇÏÁö ¸øÇÑ ¹ÌÁöÀÇ °ø°£ÀÔ´Ï´Ù.\n"
+        "¿øÇÏµç ¿øÇÏÁö ¾Ê¾Òµç ´ç½Å¿¡°Ô ºÎ¿©µÈ »ç¸íÀÌ °¡±î¿öÁö°í ÀÖ½À´Ï´Ù.\n"
+        "¾ÇÀÇ ±â¿îÀÌ ´À²¸Áı´Ï´Ù...";
     int console_width = 120 - 32 + 1;
     int console_height = 17 - 2 + 1;
     int start_x = 32;
@@ -244,7 +235,7 @@ void stage2_clear(char id[]) {
         }
     }
     final_y = start_y + line;
-    const char* hp_recovered_text = "[HPê°€ ìµœëŒ€ì¹˜ê¹Œì§€ íšŒë³µë˜ì—ˆìŠµë‹ˆë‹¤]";
+    const char* hp_recovered_text = "[HP°¡ ÃÖ´ëÄ¡±îÁö È¸º¹µÇ¾ú½À´Ï´Ù]";
     int hp_recovered_x = start_x + (console_width - strlen(hp_recovered_text)) / 2;
     gotoxy(hp_recovered_x, final_y + 1);
     setRGBColor(0, 255, 0);
@@ -253,7 +244,7 @@ void stage2_clear(char id[]) {
     int message_x = start_x + (console_width - 27) / 2;
     gotoxy(message_x, final_y + 4);
     Sleep(1975);
-    printf("ê³„ì†í•˜ë ¤ë©´ Enterë¥¼ ëˆ„ë¥´ì„¸ìš”");
+    printf("°è¼ÓÇÏ·Á¸é Enter¸¦ ´©¸£¼¼¿ä");
     CursorView(0);
     while (true) {
         int n = KeyControl();
